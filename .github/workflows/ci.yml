@@ -1,0 +1,30 @@
+name: ci
+
+on:
+  push:
+    branches: [ main, "fix/**" ]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # 故意失败：用于给 Agent 提供真实的 CI 失败日志
+      - name: run tests (intentionally failing)
+        run: |
+          echo "[INFO] Running order.PriceServiceTest"
+          echo "[ERROR] PriceServiceTest.testRounding:42 expected:<10.01> but was:<10.00>"
+          echo "[INFO] Running auth.AuthFilterTest"
+          echo "[ERROR] AuthFilterTest.testRejectWithoutToken:31 NullPointerException"
+          echo "    at com.shop.auth.AuthFilter.doFilter(AuthFilter.java:88)"
+          echo "[ERROR] Tests run: 42, Failures: 2, Errors: 1, Skipped: 0"
+          echo "[ERROR] BUILD FAILURE"
+          exit 1
