@@ -28,11 +28,7 @@ public class AuthFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
 
-        String token = req.getHeader("Authorization");
-        if (token == null || !tokenService.verify(token)) {
-            resp.setStatus(401);
-            return;                      // 拦截：未认证直接返回
-        }
+
         chain.doFilter(request, response);
     }
 }
